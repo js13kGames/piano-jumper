@@ -171,6 +171,10 @@ an equal blip and both held notes and rests disappear.
   one sample is a discontinuity and clicks
 - The AudioContext is created on the first user gesture, never before —
   constructing it earlier makes Firefox log an autoplay warning
+- The on-screen buttons are hidden by `(min-width:900px) and (hover:hover)`.
+  Width alone is not enough: a phone in landscape is 915–932px and an iPad is
+  wider still, so a width-only query removed the only controls those devices
+  have. `hover:hover` is what distinguishes a real pointer from a finger
 
 ---
 
