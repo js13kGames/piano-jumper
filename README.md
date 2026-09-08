@@ -6,7 +6,7 @@ A unicorn walks a piano keyboard seen from the side.
 Moving is playing: crossing from one key to the next sounds that note.
 Play the tune, and the rainbow above completes itself.
 
-Play: *(submission URL here)*
+Play: https://js13kgames.com/games/piano-jumper
 
 ---
 
@@ -71,6 +71,33 @@ terser cannot be pointed at the HTML file directly — it is a JavaScript
 parser and stops at `<!DOCTYPE`. `advzip -z -4 dist/game.zip` will squeeze
 the archive a little further if you have it, and `build.sh` runs it when
 it is present; it recompresses an existing zip and cannot create one.
+
+### Wavedash build
+
+`src/wavedash/index.html` is a copy of `src/index.html` with the
+Wavedash SDK init added. When you change the js13k source, port the
+same change across by hand — the two are intentionally separate so
+the 13KB entry carries no platform code.
+
+Build with `node build-wavedash.js` → `dist/wavedash.zip`
+(or `./build-wavedash.sh`, which installs terser first).
+`./build.sh` deliberately does not build it, so the Wavedash archive can
+never be submitted to js13k by accident. There is no size check on this
+build — the platform allows 1GB.
+
+The SDK is injected by the platform, so nothing is loaded over the network;
+the call is guarded by `window.Wavedash` and does nothing on a local server.
+
+`booleans_as_integers` is switched off in `build-wavedash.js`. It is a
+byte-saving pass that rewrites `{debug:false}` into `{debug:0}`, which is
+the wrong type to hand the SDK, and there is no size pressure here to
+justify it.
+
+```sh
+diff src/index.html src/wavedash/index.html   # expect only the Wavedash lines
+```
+
+---
 
 `src/index.html` runs as-is in a browser without building.
 Open it through a local server rather than `file://`
